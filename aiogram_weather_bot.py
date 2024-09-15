@@ -5,11 +5,12 @@ from aiogram.types import Message
 from aiogram.filters import Command
 import asyncio
 
+
 # Включаем логирование
 logging.basicConfig(level=logging.INFO)
 
 # Ваш токен от BotFather
-TOKEN = '7339699782:AAEL2Qhwr3_SKJhco56vWxUFqUZNDKHOdTg'
+from config import TOKEN
 # Ваш API-ключ OpenWeatherMap
 WEATHER_API_KEY = 'Вa7e004594fb3bfc77e40ef3ddc9ff369'
 
