@@ -59,6 +59,11 @@ async def send_weather(message: Message):
     weather_info = await get_weather(city)
     await message.answer(f"Погода в {city}:\n{weather_info}", parse_mode="HTML")
 
+# Ссоздаем пустой декоратор
+@dp.message()
+async def start(message: Message):
+    await message.answer("Я тебе ответил")
+
 
 # Главная функция запуска бота
 async def main():
