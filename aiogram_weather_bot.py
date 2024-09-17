@@ -68,6 +68,16 @@ async def send_weather(message: Message):
     weather_info = await get_weather(city)
     await message.answer(f"Погода в {city}:\n{weather_info}", parse_mode="HTML")
 
+# Обработчик команды /voice, для отправки голосового сообщения
+@dp.message(Command("voice"))
+async def send_voice_message(message: Message):
+    text = "Привет! Это голосовое сообщение, созданное с помощью бота."
+    tts = gTTS(text=text, lang='ru')
+    voice_file = io.BytesIO()  # Временный файл для хранения голосового сообщения
+    tts.write_to_fp(voice_file)
+    voice_file.seek(0)
+    await message.answer_voice(voice_file)
+
 
 # Обработчик для получения и сохранения фото
 @dp.message(F.photo)
@@ -88,16 +98,6 @@ async def handle_translation(message: types.Message):
     translated_text = translator.translate(message.text, dest='en').text
     await message.answer(f"Перевод на английский: {translated_text}")
 
-
-# Обработчик команды /voice, для отправки голосового сообщения
-@dp.message(Command("voice"))
-async def send_voice_message(message: Message):
-    text = "Привет! Это голосовое сообщение, созданное с помощью бота."
-    tts = gTTS(text=text, lang='ru')
-    voice_file = io.BytesIO()  # Временный файл для хранения голосового сообщения
-    tts.write_to_fp(voice_file)
-    voice_file.seek(0)
-    await message.answer_voice(voice_file)
 
 
 # Главная функция запуска бота
