@@ -1,11 +1,11 @@
 import requests
 import logging
-from aiogram import Bot, Dispatcher, types
+from aiogram import Bot, Dispatcher, types, F
 from aiogram.types import Message
 from aiogram.filters import Command
 import asyncio
 import os
-from googletrans import Translator  # Для перевода текста
+from translate import Translator  # Для перевода текста
 from gtts import gTTS  # Для создания голосовых сообщений
 import io
 
@@ -21,7 +21,7 @@ WEATHER_API_KEY = 'Вa7e004594fb3bfc77e40ef3ddc9ff369'
 # Инициализация бота и переводчика
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
-translator = Translator()
+translator = Translator(to_lang="en")  # Инициализация переводчика на английский язык
 
 # Создание папки для сохранения изображений, если её ещё нет
 if not os.path.exists("IMG"):
@@ -70,16 +70,20 @@ async def send_weather(message: Message):
 
 
 # Обработчик для получения и сохранения фото
-@dp.message_handler(content_types=types.ContentType.PHOTO)
+@dp.message(F.photo)
 async def handle_photos(message: types.Message):
     photo = message.photo[-1]  # Получаем фото самого высокого качества
-    photo_path = f"IMG/{photo.file_unique_id}.jpg"  # Уникальное имя файла
+    photo_path = os.path.join(os.getcwd(), "IMG", f"{photo.file_unique_id}.jpg")  # Уникальное имя файла
     await photo.download(photo_path)  # Сохраняем фото в папку IMG
     await message.answer("Фото сохранено!")
 
 
 # Обработчик для перевода текста на английский
-@dp.message_handler(content_types=types.ContentType.TEXT)
+from googletrans import Translator  # Использование googletrans
+
+translator = Translator()
+
+@dp.message(F.text)
 async def handle_translation(message: types.Message):
     translated_text = translator.translate(message.text, dest='en').text
     await message.answer(f"Перевод на английский: {translated_text}")
